@@ -60,12 +60,13 @@ class AthleticAlyze:
     def search_tweets(self, query_str, field):
         # Method for searching the keyword.
         query = None
-        if(field == self.TWEET_COL):
-            query = self.tweetParser.parse(query_str)
-        elif(field == self.HASHTAG_COL):
+        
+        if(field == self.HASHTAG_COL):
             query = self.hashtagParser.parse(query_str)
+        elif(field == self.TWEET_COL):
+            query = self.tweetParser.parse(query_str)
         else:
-            print("Invalid column name")
+            print("Invalid column name. Please provide either 'tweet' or 'hashtags' as 3rd parameter.")
             return
 
         searcher = IndexSearcher(DirectoryReader.open(self.indexFolder))
@@ -75,9 +76,10 @@ class AthleticAlyze:
         for result in searchResults.scoreDocs:
             output = searcher.doc(result.doc)
             print("Score:", result.score)
-            print("Tweet:", output.get(self.TWEET_COL))
+            print("Tweets:", output.get(self.TWEET_COL))
             print("Hashtags:", output.get(self.HASHTAG_COL))
             print("\n")
+        return
 
 if __name__ == '__main__':
     lucene.initVM(vmargs=['-Djava.awt.headless=true'])
