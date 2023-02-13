@@ -32,29 +32,19 @@ def writeTweets(filename, tag, keys, maxTweets):
       for row in reader:
         tweetIds.add(str(row[0]))
   with open(filename, 'a', newline='', encoding='utf8') as csvFile:
-    fieldNames = ['id', 'tweet', 'time', 'lat', 'long', 'hashtag'] #id,tweet,time,lat,long,hashtag
+    fieldNames = ['id', 'tweet', 'time', 'lat', 'long', 'hashtag']  #id,tweet,time,lat,long,hashtag
     writer = csv.DictWriter(csvFile, fieldnames=fieldNames)
     if not fileExists:
         writer.writeheader()
     while tweetCount < maxTweets:
-      # print("Count:", tweetCount)
       try:
         if(maxId <= 0):
-          # newTweets = api.search(q=hashtag, count=tweetsPerQry, result_type="recent", tweet_mode="extended")
           newTweets = api.search_tweets(q=tag, count=tweetsPerQry, result_type="recent", tweet_mode="extended")
         else:
           newTweets = api.search_tweets(q=tag, count=tweetsPerQry, max_id=str(maxId - 1), result_type="recent", tweet_mode="extended")
         
-        # if not newTweets:
-        #   print("Tweet Habis")
-        #   break
-        
         for tweet in newTweets:
             if str(tweet.id) not in tweetIds:
-           #if str(tweet.id) not in tweetIds and (tweet.coordinates):
-          #if str(tweet.id) not in tweetIds:
-            #lat = random.uniform(24.396308, 49.384358)
-            #long = random.uniform(-124.848974, -66.885444)
                 if tweet.coordinates:
                     lat = tweet.coordinates["coordinates"][1]
                     long = tweet.coordinates["coordinates"][0]
@@ -62,15 +52,12 @@ def writeTweets(filename, tag, keys, maxTweets):
                     lat = ''
                     long = ''
                 tweetBody = str(tweet.full_text.encode(encoding='utf8'))
-                # print("TWEET==>",tweetBody)
                 tags = re.findall(r'#\w+', tweetBody)
                 tagCol = ' '.join(tags)
                 hashtag= tagCol
                 tweetIds.add(tweet.id)
                 val = {'id': tweet.id, 'tweet': tweet.full_text.encode(encoding='utf8'), 'time': tweet.created_at, 'lat': lat, 'long': long, 'hashtag': hashtag}
                 writer.writerow(val)
-                # print(val)
-                # print("id:", tweet.id, "tweet:", tweet.full_text.encode(encoding='utf8'), "time:", tweet.created_at, "geo:", tweet.user.location, "enabled:", tweet.user.geo_enabled)
           
         tweetCount += len(newTweets)
         maxId = newTweets[-1].id
@@ -82,7 +69,6 @@ def writeTweets(filename, tag, keys, maxTweets):
 
 def crawl(key, fileName, hashtag, maxTweets):
   threads = []
-  # hashtag = "Rashford,Beasley,Westbrook,INDvAUS,Martinez"
   tags = hashtag.split(',')
   for i in range(5):
     filename = fileName + str(i) + '.csv'
@@ -94,11 +80,9 @@ def crawl(key, fileName, hashtag, maxTweets):
     t.join()
 
 keys = ["7j3SDWeoHo1YqTSqQXAQoPifj", "ITFFjSkuGkshQYhOFJpNB4diTM8h3EWVDJQHxbpClADKTNwMwc", "1254426768-MIvdYvzS72RKamMAGG3ovGJDO9zx1xSpag9hiZn", "J04nzhvEt3eNanYHhVluAtQ9SC9H6cnpcSqgoV06zUAAG"]
-# hashtags = "Man United,Laker,BGT2023,OMPSG,Utah"
 hashtags = "Jae Crowder,INDvsAUS,Pant,KS Bharat,Jadeja"
 
 if __name__ == '__main__':
     fileName = sys.argv[1]
     maxTweets = int(sys.argv[2])
-    # print("type:", type(maxTweets))
     crawl(keys, fileName, hashtags, maxTweets)
