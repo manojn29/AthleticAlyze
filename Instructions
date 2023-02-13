@@ -1,0 +1,5 @@
+ssh psing088@bolt.cs.ucr.edu
+ssh psing088@bolt.cs.ucr.edu
+cs242_login
+jupyter lab --ip 0.0.0.0 --port 8888
+http://class-045.cs.ucr.edu:8888/lab/tree/FirstCode.ipynb
