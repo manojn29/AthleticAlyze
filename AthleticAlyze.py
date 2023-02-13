@@ -16,11 +16,12 @@ from org.apache.lucene.index import FieldInfo, IndexWriter, IndexWriterConfig, I
 # lucene.initVM(vmargs=['-Djava.awt.headless=true'])
 # Define the field names for the CSV file
 class AthleticAlyze:
-    TWEET_COL = "tweet"
-    HASHTAG_COL = "hashtags"
 
     def __init__(self):
         # Initializing analyzers and parsers.
+
+        self.TWEET_COL = "tweet"
+        self.HASHTAG_COL = "hashtags"
         self.tweetAnalyzer = StandardAnalyzer()
         self.hashtagAnalyzer = KeywordAnalyzer()
 
@@ -28,11 +29,11 @@ class AthleticAlyze:
         self.hashtagParser = QueryParser(self.HASHTAG_COL, self.hashtagAnalyzer)
 
         # Definition of index directorys.
-        self.indexDir = SimpleFSDirectory(Paths.get("AthleticAlyzeIndex"))
+        self.indexFolder = SimpleFSDirectory(Paths.get("AthleticAlyzeIndex"))
 
         # Creation of index writer.
         self.config = IndexWriterConfig(self.tweetAnalyzer)
-        self.indexWriter = IndexWriter(self.indexDir, self.config)
+        self.indexWriter = IndexWriter(self.indexFolder, self.config)
 
     def index_tweets(self, fileName):
         # Method for indexing the csv file.
@@ -61,23 +62,22 @@ class AthleticAlyze:
         query = None
         if(field == self.TWEET_COL):
             query = self.tweetParser.parse(query_str)
-        elif field == self.HASHTAG_COL:
+        elif(field == self.HASHTAG_COL):
             query = self.hashtagParser.parse(query_str)
         else:
             print("Invalid column name")
             return
 
-        searcher = IndexSearcher(DirectoryReader.open(self.indexDir))
-        results = searcher.search(query, 10)
+        searcher = IndexSearcher(DirectoryReader.open(self.indexFolder))
+        searchResults = searcher.search(query, 10)
 
         print("Results:")
-        for result in results.scoreDocs:
+        for result in searchResults.scoreDocs:
             output = searcher.doc(result.doc)
             print("Score:", result.score)
             print("Tweet:", output.get(self.TWEET_COL))
             print("Hashtags:", output.get(self.HASHTAG_COL))
             print("\n")
-
 
 if __name__ == '__main__':
     lucene.initVM(vmargs=['-Djava.awt.headless=true'])
