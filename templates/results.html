@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+  <title>Search Results</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.min.css" integrity="sha512-XrBXdLn3qKvjJnYQwzRyogFbkSCdDgeJpDrD8lLJbPLS5OW5wu0u5v+Yyl7h4ORJ0k6C9uuzvD2V+IBGgrhxQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    #map {
+      height: 500px;
+    }
+    input[type="submit"] {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #3e8e41;
+        }    
+  </style>
+</head>
+<body>
+	<script>
+		
+		
+	console.log("ji")
+	localStorage.setItem('res', '{{results}}');
+    //console.log({{results}})
+	
+	</script>
+  <h1>Search Results</h1>
+  <form action = '/map' method = 'POST'>
+	  <input type="hidden" name="data" value = "hi" />
+	  <button name = 'backbtn' type='submit'> MAP </button>
+  </form>
+  <form action = '/' method = 'POST'>
+	  <input type="hidden" name="data" value = "hi" />
+	  <button name = 'backbtn' type='submit'> BACK </button>
+  </form>
+
+    <style>
+    table, th, td {
+     border:1px solid black;
+    }
+  </style>
+  <table class="table table-bordered table-hover table-condensed">
+    <thead><tr><th title="Field #1">Score</th>
+    <th title="Field #3">Tweets</th>
+    <th title="Field #3">Hashtags</th>
+    <th title="Field #3">Tweet URL</th>
+    </tr></thead>
+
+    <tbody>
+      {% for res in results %}
+        <tr>
+          <td>{{ res[0] }}</td>
+          <td>{{ res[1] }}</td>
+          <td>{{ res[4] }}</td>
+            <td>{{ res[5] }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div id="map"></div>
+    
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.min.js" integrity="sha512-VHsZdTOBZsFv/WtKjMGYiBPGtOQndtTgX9doJMHK61G86rLe3LSZmbzKIRwM2fStJhRd0bUhCpX0fL8kjEBa3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+    var mymap = L.map('map').setView([51.505, -0.09], 13);
+    console.log("results:")
+    console.log(results)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(mymap);
+    
+    var marker = L.marker([{ 33.9806}, { 117.3755}]).addTo(mymap);
+    marker.bindPopup("<b>{{ puneet }}</b><br>{{ GoodBoy }}");
+  </script>
+</body>
+</html>
