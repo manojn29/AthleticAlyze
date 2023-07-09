@@ -1,0 +1,59 @@
+<body>
+
+	<span id="myText"></span>
+	     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBpiTlMvMhBLQRR6BFu3DEcfD3Ym8yxahc"></script>
+	      <div id="map" style="height: 500px;"></div>
+
+	<script>
+		// Extract latitude and longitude values from tweets array
+		const arr = localStorage.getItem('res');
+		console.log( arr)
+                newStr = arr.replace(/&#39;/g, "");
+		newStr = newStr.replace(/&#34;/g,"");
+		var str_array = newStr.split(',');
+console.log(str_array)	
+const coordinates = [];
+let lat,lng;
+const array =[];
+for (let tweet of str_array) {
+	  const nlat = tweet.match(/Lat: ([\d.-]+)/);
+	 console.log(lat);
+	  const nlng = tweet.match(/Long: ([\d.-]+)/);
+	console.log(lng);
+	if (nlat) {
+		    lat = parseFloat(nlat[1]);
+		  }
+
+	  if (nlng) {
+		      lng = parseFloat(nlng[1]);
+		    }
+
+	  if (lat !== undefined && lng !== undefined) {
+		      coordinates.push({ lat, lng });
+		    }
+}
+
+
+console.log(coordinates);
+
+// Create Google map object
+const map = new google.maps.Map(document.getElementById("map"), {
+	  center: { lat: 39.8283, lng: -98.5795 },
+	  zoom: 4,
+});
+
+// Add markers to map for each coordinate
+for (let coordinate of coordinates) {
+	  const marker = new google.maps.Marker({
+		      position: { lat: coordinate.lat, lng: coordinate.lng },
+		      map,
+		      title: coordinate.text,
+		    });
+}
+ 
+
+	</script>
+
+
+</body>
+

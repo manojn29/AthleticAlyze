@@ -1,0 +1,70 @@
+<style>
+    input[type="submit"] {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #3e8e41;
+        }    
+</style>
+
+<body>
+ <form action = '/' method = 'POST'>
+     <input type="hidden" name="data" value = "hi" />
+                <button name = 'backbtn' type='submit'> BACK </button>
+
+	<span id="myText"></span>
+	     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBpiTlMvMhBLQRR6BFu3DEcfD3Ym8yxahc"></script>
+	      <div id="map" style="height: 800px;"></div>
+
+	<script>
+		// Extract latitude and longitude values from tweets array
+		var data_tuple = localStorage.getItem('res');
+        innerLists = data_tuple.slice(2,-2).split('], [')
+        var coordinates = [];
+        for(var i = 0; i < innerLists.length; i++)
+        {
+            li = innerLists[i].split(',')
+            console.log(li)
+            li[2] = li[2].replaceAll("&#39;", "")
+            li[2] = li[2].replaceAll("&#34;", "")
+            li[3] = li[3].replaceAll("&#39;", "")
+            li[3] = li[3].replaceAll("&#34;", "")
+            lat = parseFloat(li[2])
+            long = parseFloat(li[3])
+            console.log("lat:" + lat + ", long: " + long)
+            coordinates.push({lat: lat, lng: long});
+        }
+        console.log("maps.html")
+
+
+console.log(coordinates);
+
+// Create Google map object
+const map = new google.maps.Map(document.getElementById("map"), {
+	  center: { lat: 39.8283, lng: -98.5795 },
+	  zoom: 4,
+      fullscreenControl: true,
+});
+
+// Add markers to map for each coordinate
+for (let coordinate of coordinates) {
+	  const marker = new google.maps.Marker({
+		      position: { lat: coordinate.lat, lng: coordinate.lng },
+		      map,
+		      title: coordinate.text,
+		    });
+}
+ 
+
+	</script>
+
+
+</body>
+
